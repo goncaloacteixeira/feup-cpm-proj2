@@ -93,10 +93,12 @@ class _HomePageState extends State<HomePage> {
                 .of(context)
                 .size
                 .width,
+            padding: const EdgeInsets.all(10.0),
             margin: const EdgeInsets.only(bottom: 18.0),
-            child: ListView.builder(
+            child: ListView.separated(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
+              separatorBuilder: (context, index) => SizedBox(height: 10,),
               itemBuilder: (context, index) => CityMainItem(city: _cities.toList()[index]),
               itemCount: _cities.length,
             ),

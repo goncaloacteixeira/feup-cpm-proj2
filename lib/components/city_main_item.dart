@@ -10,13 +10,9 @@ class CityMainItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
+          borderRadius: BorderRadius.circular(10), color: Colors.blue),
       child: Row(
         children: [
           Expanded(
@@ -30,10 +26,10 @@ class CityMainItem extends StatelessWidget {
             flex: 6,
             child: Text(
               city.city,
-              style: Theme
-                  .of(context)
+              style: Theme.of(context)
                   .textTheme
-                  .titleLarge,
+                  .titleLarge
+                  ?.copyWith(color: Colors.white),
             ),
           ),
           Expanded(
@@ -44,10 +40,10 @@ class CityMainItem extends StatelessWidget {
                 children: [
                   Text(
                     "${(city.weather["current"]["temp"] as num).toStringAsFixed(0)}\u00B0",
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
-                        .headlineLarge,
+                        .headlineLarge
+                        ?.copyWith(color: Colors.white),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -55,24 +51,28 @@ class CityMainItem extends StatelessWidget {
                     children: [
                       Text(
                         "${(city.weather["daily"][0]["temp"]["max"] as num).toStringAsFixed(0)}\u00B0",
-                        style: Theme
-                            .of(context)
+                        style: Theme.of(context)
                             .textTheme
-                            .bodyText2,
+                            .bodyText2
+                            ?.copyWith(color: Colors.white),
                       ),
-                      const Text("/"),
+                      Text(
+                          "/",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.copyWith(color: Colors.white)),
                       Text(
                         "${(city.weather["daily"][0]["temp"]["min"] as num).toStringAsFixed(0)}\u00B0",
-                        style: Theme
-                            .of(context)
+                        style: Theme.of(context)
                             .textTheme
-                            .bodyText2,
+                            .bodyText2
+                            ?.copyWith(color: Colors.white),
                       ),
                     ],
                   )
                 ],
-              )
-          ),
+              )),
         ],
       ),
     );
