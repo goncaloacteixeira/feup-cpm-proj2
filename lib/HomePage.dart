@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:w4cast/constants.dart';
+import 'package:w4cast/EditCitiesPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -12,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> _cities = ["Porto", "Faro"];
+  Set<String> _cities = {};
 
   @override
   void initState() {
@@ -25,31 +26,9 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       var citiesString = prefs.getString("cities");
       if (citiesString != null) {
-        _cities = citiesString.split(";");
+        _cities = Set.of(citiesString.split(";"));
       }
     });
-  }
-
-  Widget _generateCityItem(String city) {
-    return Text(
-      city,
-      style: Theme
-          .of(context)
-          .textTheme
-          .headline4,
-    );
-  }
-
-  Dialog _addCityDialog() {
-    return Dialog(
-      elevation: 16,
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          for (var city in allCities) _generateCityItem(city)
-        ],
-      ),
-    );
   }
 
   @override
@@ -57,6 +36,24 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) =>
+                                  const EditCitiesPage(title: "Cities")))
+                      .then((value) => _loadCities());
+                },
+                child: const Icon(
+                  Icons.add,
+                  size: 26.0,
+                ),
+              )),
+        ],
       ),
       body: Center(
         child: Column(
@@ -65,17 +62,10 @@ class _HomePageState extends State<HomePage> {
             const Text(
               'Cities:',
             ),
-            for (var city in _cities) _generateCityItem(city)
+            for (var city in _cities) Text(city)
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(context: context, builder: (context) => _addCityDialog());
-        },
-        tooltip: 'Add City',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
