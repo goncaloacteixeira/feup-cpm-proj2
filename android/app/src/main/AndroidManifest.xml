@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.feup.cpm.group9.w4cast">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="w4cast"
         android:name="${applicationName}"

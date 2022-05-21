@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w4cast/EditCitiesPage.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:w4cast/constants.dart';
+import 'package:w4cast/models/city.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -13,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Set<String> _cities = {};
+  Set<City> _cities = {};
 
   @override
   void initState() {
@@ -23,11 +29,31 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadCities() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      var citiesString = prefs.getString("cities");
-      if (citiesString != null) {
-        _cities = Set.of(citiesString.split(";"));
+    var citiesString = prefs.getString("cities");
+    Set<City> newValue = {};
+    if (citiesString != null) {
+      var citiesNames = citiesString.split(";");
+      for (var city in citiesNames) {
+        final response = await http.get(Uri.parse(
+            'http://api.openweathermap.org/geo/1.0/direct?q=$city,PT&limit=5&appid=$API_KEY'));
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          newValue.add(City.fromJson(jsonDecode(response.body)[0]));
+        }
       }
+    }
+
+    for (var city in newValue) {
+      final response = await http.get(Uri.parse(
+          'https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&exclude=minutely&units=metric&appid=$API_KEY'));
+      if (response.statusCode == 200) {
+        city.weather = jsonDecode(response.body);
+      }
+    }
+
+    setState(() {
+      _cities = newValue;
     });
   }
 
@@ -62,7 +88,7 @@ class _HomePageState extends State<HomePage> {
             const Text(
               'Cities:',
             ),
-            for (var city in _cities) Text(city)
+            for (var city in _cities) Text(city.city),
           ],
         ),
       ),

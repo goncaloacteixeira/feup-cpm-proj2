@@ -18,3 +18,5 @@ const List<String> allCities = [
   "Vila Real",
   "Viseu"
 ];
+
+const String API_KEY = "b204d4a0fc359c235ea30830863715bc";
