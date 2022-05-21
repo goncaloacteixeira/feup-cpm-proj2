@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:w4cast/components/EditCityItem.dart';
+import 'package:w4cast/components/edit_city_item.dart';
 import 'package:w4cast/constants.dart';
 
 class EditCitiesPage extends StatelessWidget {
