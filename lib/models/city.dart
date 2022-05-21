@@ -18,9 +18,9 @@ class City {
   @override
   int get hashCode => city.hashCode ^ country.hashCode;
 
-  factory City.fromJson(Map<String, dynamic> json) {
+  factory City.fromJson(String name, Map<String, dynamic> json) {
     return City(
-        city: json["name"],
+        city: name,
         country: "Portugal",
         lat: json["lat"],
         lon: json["lon"]

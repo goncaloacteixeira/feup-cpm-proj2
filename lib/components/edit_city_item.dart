@@ -59,7 +59,7 @@ class _EditCityItemState extends State<EditCityItem> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(widget.name, style: Theme.of(context).textTheme.bodyText2,)),
+        Expanded(child: Text(widget.name, style: Theme.of(context).textTheme.titleLarge,)),
         Switch.adaptive(value: _isActive, onChanged: _handleChange)
       ],
     );
