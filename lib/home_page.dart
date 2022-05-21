@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:w4cast/components/city_main_item.dart';
 import 'package:w4cast/edit_cities_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:w4cast/constants.dart';
@@ -45,7 +46,9 @@ class _HomePageState extends State<HomePage> {
 
     for (var city in newValue) {
       final response = await http.get(Uri.parse(
-          'https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&exclude=minutely&units=metric&appid=$API_KEY'));
+          'https://api.openweathermap.org/data/2.5/onecall?lat=${city
+              .lat}&lon=${city
+              .lon}&exclude=minutely&units=metric&appid=$API_KEY'));
       if (response.statusCode == 200) {
         city.weather = jsonDecode(response.body);
       }
@@ -56,86 +59,48 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Widget _createCityWidget(City city) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          Image(
-            image: NetworkImage(
-                "http://openweathermap.org/img/wn/${city.weather["current"]["weather"][0]["icon"]}@2x.png"),
-          ),
-          Expanded(
-            child: Text(
-              city.city,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "${(city.weather["current"]["temp"] as num).toStringAsFixed(0)}\u00B0",
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              Row(
-                children: [
-                  Text(
-                      "${(city.weather["daily"][0]["temp"]["max"] as num).toStringAsFixed(0)}\u00B0",
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                  const Text("/"),
-                  Text(
-                      "${(city.weather["daily"][0]["temp"]["min"] as num).toStringAsFixed(0)}\u00B0",
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                ],
-              )
-            ],
-          )
-
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  const EditCitiesPage(title: "Cities")))
-                      .then((value) => _loadCities());
-                },
-                child: const Icon(
-                  Icons.add,
-                  size: 26.0,
-                ),
-              )),
-        ],
-      ),
-      body: ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return _createCityWidget(_cities.toList()[index]);
-        },
-        itemCount: _cities.length,
-      ),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+          actions: [
+            Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) =>
+                            const EditCitiesPage(title: "Cities")))
+                        .then((value) => _loadCities());
+                  },
+                  child: const Icon(
+                    Icons.edit,
+                    size: 26.0,
+                  ),
+                )),
+          ],
+        ),
+        body: Center(
+          child: Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
+            margin: const EdgeInsets.only(bottom: 18.0),
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (context, index) => CityMainItem(city: _cities.toList()[index]),
+              itemCount: _cities.length,
+            ),
+          ),
+        ));
   }
 }
