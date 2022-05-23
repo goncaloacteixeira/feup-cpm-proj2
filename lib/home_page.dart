@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Set<City> _cities = {};
+  bool _loading = false;
 
   @override
   void initState() {
@@ -29,6 +30,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadCities() async {
+    setState(() {
+      _loading = true;
+    });
+
     final prefs = await SharedPreferences.getInstance();
     var citiesString = prefs.getString("cities");
     Set<City> newValue = {};
@@ -55,7 +60,50 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _cities = newValue;
+      _loading = false;
     });
+  }
+
+  Widget _buildPage(BuildContext context) {
+    if (_loading) {
+      return SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: const Center(
+          child: CupertinoActivityIndicator(),
+        ),
+      );
+    } else {
+      return Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(10.0),
+          margin: const EdgeInsets.only(bottom: 18.0),
+          child: ListView.separated(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            separatorBuilder: (context, index) => const SizedBox(
+              height: 10,
+            ),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) =>
+                                  CityPage(city: _cities.toList()[index])))
+                      .then((value) => _loadCities());
+                },
+                child: CityMainItem(city: _cities.toList()[index]),
+              );
+            },
+            itemCount: _cities.length,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -71,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                             context,
                             CupertinoDialogRoute(
-                              context: context,
+                                context: context,
                                 builder: (context) =>
                                     const EditCitiesPage(title: "Cities")))
                         .then((value) => _loadCities());
@@ -83,33 +131,6 @@ class _HomePageState extends State<HomePage> {
                 )),
           ],
         ),
-        body: Center(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(10.0),
-            margin: const EdgeInsets.only(bottom: 18.0),
-            child: ListView.separated(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 10,
-              ),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) =>
-                                CityPage(city: _cities.toList()[index])));
-                  },
-                  child: CityMainItem(city: _cities.toList()[index]),
-                );
-              },
-              itemCount: _cities.length,
-            ),
-          ),
-        ));
+        body: _buildPage(context));
   }
 }
