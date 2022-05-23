@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:w4cast/city_page.dart';
 import 'package:w4cast/components/city_main_item.dart';
 import 'package:w4cast/edit_cities_page.dart';
 import 'package:http/http.dart' as http;
@@ -46,9 +47,7 @@ class _HomePageState extends State<HomePage> {
 
     for (var city in newValue) {
       final response = await http.get(Uri.parse(
-          'https://api.openweathermap.org/data/2.5/onecall?lat=${city
-              .lat}&lon=${city
-              .lon}&exclude=minutely&units=metric&appid=$API_KEY'));
+          'https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&exclude=minutely&units=metric&appid=$API_KEY'));
       if (response.statusCode == 200) {
         city.weather = jsonDecode(response.body);
       }
@@ -70,10 +69,11 @@ class _HomePageState extends State<HomePage> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) =>
-                            const EditCitiesPage(title: "Cities")))
+                            context,
+                            CupertinoDialogRoute(
+                              context: context,
+                                builder: (context) =>
+                                    const EditCitiesPage(title: "Cities")))
                         .then((value) => _loadCities());
                   },
                   child: const Icon(
@@ -85,21 +85,28 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Center(
           child: Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.all(10.0),
             margin: const EdgeInsets.only(bottom: 18.0),
             child: ListView.separated(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              separatorBuilder: (context, index) => SizedBox(height: 10,),
-              itemBuilder: (context, index) => CityMainItem(city: _cities.toList()[index]),
+              separatorBuilder: (context, index) => const SizedBox(
+                height: 10,
+              ),
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) =>
+                                CityPage(city: _cities.toList()[index])));
+                  },
+                  child: CityMainItem(city: _cities.toList()[index]),
+                );
+              },
               itemCount: _cities.length,
             ),
           ),
