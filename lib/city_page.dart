@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:w4cast/components/city_day_weather_item.dart';
+import 'package:w4cast/components/city_hour_weather_item.dart';
 import 'package:w4cast/models/city.dart';
 import 'package:w4cast/utils.dart';
 
@@ -81,34 +83,7 @@ class CityPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     for (Weather hour in city.hourlyWeather.sublist(0, 5))
-                      Column(
-                        children: [
-                          Text(Utils.toHourFormat(hour.dateTime),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline1
-                                          ?.color)),
-                          Image(
-                            image: NetworkImage(
-                                "http://openweathermap.org/img/wn/${hour.icon}.png"),
-                          ),
-                          Text(
-                            "${hour.temperature.toStringAsFixed(0)}\u00B0",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .headline1
-                                        ?.color),
-                          ),
-                        ],
-                      )
+                      CityHourWeatherItem(hour: hour)
                   ],
                 )),
             Container(
@@ -118,43 +93,7 @@ class CityPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     for (DayWeather day in city.dailyWeather)
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.only(bottom: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image(
-                                  image: NetworkImage(
-                                      "http://openweathermap.org/img/wn/${day.icon}.png"),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                FutureBuilder<String>(
-                                  future: Utils.formatDate(day.day),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text(snapshot.data!);
-                                    } else {
-                                      return const Text("loading");
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "${Utils.formatTemperature(day.max)}/${Utils.formatTemperature(day.min)}",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            )
-                          ],
-                        ),
-                      )
+                      CityDayWeatherItem(day: day)
                   ],
                 ))
           ],
