@@ -3,7 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 class Utils {
   static toHourFormat(DateTime dateTime) {
-    final DateFormat formatter = DateFormat('HH');
+    final DateFormat formatter = DateFormat('HH:mm');
     final String formatted = formatter.format(dateTime);
     return formatted;
   }

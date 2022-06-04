@@ -86,7 +86,7 @@ class CityPage extends StatelessWidget {
                           Text(Utils.toHourFormat(hour.dateTime),
                               style: Theme.of(context)
                                   .textTheme
-                                  .titleMedium
+                                  .titleSmall
                                   ?.copyWith(
                                       color: Theme.of(context)
                                           .textTheme
@@ -100,7 +100,7 @@ class CityPage extends StatelessWidget {
                             "${hour.temperature.toStringAsFixed(0)}\u00B0",
                             style: Theme.of(context)
                                 .textTheme
-                                .titleSmall
+                                .titleMedium
                                 ?.copyWith(
                                     color: Theme.of(context)
                                         .textTheme
