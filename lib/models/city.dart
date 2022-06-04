@@ -2,12 +2,18 @@ class Weather {
   final num temperature;
   final String icon;
   final DateTime dateTime;
+  final num humidity;
+  final num clouds;
+  final num uvi;
+  final num visibility;
+  final num windSpeed;
 
-  Weather(this.temperature, this.icon, this.dateTime);
+  Weather(this.temperature, this.icon, this.dateTime, this.humidity,
+      this.clouds, this.uvi, this.visibility, this.windSpeed);
 
   @override
   String toString() {
-    return 'Weather{temperature: $temperature, icon: $icon, dateTime: $dateTime}';
+    return 'Weather{temperature: $temperature, icon: $icon, dateTime: $dateTime, humidity: $humidity, clouds: $clouds, uvi: $uvi, visibility: $visibility, windSpeed: $windSpeed}';
   }
 }
 
@@ -50,10 +56,16 @@ class City {
         weather["daily"][0]["weather"][0]["icon"]);
 
     currentWeather = Weather(
-        weather["current"]["temp"] as num,
-        weather["current"]["weather"][0]["icon"],
-        DateTime.fromMillisecondsSinceEpoch(
-            (weather["current"]["dt"] as int) * 1000));
+      weather["current"]["temp"] as num,
+      weather["current"]["weather"][0]["icon"],
+      DateTime.fromMillisecondsSinceEpoch(
+          (weather["current"]["dt"] as int) * 1000),
+      weather["current"]["humidity"] as num,
+      weather["current"]["clouds"] as num,
+      weather["current"]["uvi"] as num,
+      weather["current"]["visibility"] as num,
+      weather["current"]["wind_speed"] as num,
+    );
 
     dailyWeather = [];
     for (var day in weather["daily"]) {
@@ -66,8 +78,16 @@ class City {
 
     hourlyWeather = [];
     for (var hour in weather["hourly"]) {
-      hourlyWeather.add(Weather(hour["temp"] as num, hour["weather"][0]["icon"],
-          DateTime.fromMillisecondsSinceEpoch((hour["dt"] as int) * 1000)));
+      hourlyWeather.add(Weather(
+        hour["temp"] as num,
+        hour["weather"][0]["icon"],
+        DateTime.fromMillisecondsSinceEpoch((hour["dt"] as int) * 1000),
+        hour["humidity"] as num,
+        hour["clouds"] as num,
+        hour["uvi"] as num,
+        hour["visibility"] as num,
+        hour["wind_speed"] as num,
+      ));
     }
   }
 

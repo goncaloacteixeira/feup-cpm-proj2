@@ -34,8 +34,9 @@ class CityDayWeatherItem extends StatelessWidget {
               FutureBuilder<String>(
                 future: Utils.formatDate(day.day),
                 builder: (context, snapshot) {
-                  return snapshot.hasData ? Text(snapshot.data!) : const Text(
-                      'loading');
+                  return snapshot.hasData ?
+                  Text(snapshot.data!, style: Theme.of(context).textTheme.titleMedium,) :
+                  const Text('loading');
                 },
               ),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:w4cast/components/city_day_weather_item.dart';
 import 'package:w4cast/components/city_hour_weather_item.dart';
+import 'package:w4cast/components/city_weather_details_item.dart';
 import 'package:w4cast/models/city.dart';
 import 'package:w4cast/utils.dart';
 
@@ -86,6 +87,42 @@ class CityPage extends StatelessWidget {
                       CityHourWeatherItem(hour: hour)
                   ],
                 )),
+            const Divider(),
+            Container(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CityWeatherDetailsItem(
+                      property: "Humidade",
+                      icon: Icons.water_drop,
+                      value: Utils.toPercentage(city.currentWeather.humidity)),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  CityWeatherDetailsItem(
+                      property: "Nuvens",
+                      icon: Icons.cloud,
+                      value: Utils.toPercentage(city.currentWeather.clouds)),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  CityWeatherDetailsItem(
+                      property: "Visibilidade",
+                      icon: Icons.visibility,
+                      value: Utils.classifyVisibility(city.currentWeather.visibility)),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  CityWeatherDetailsItem(
+                      property: "Vento",
+                      icon: Icons.air,
+                      value: Utils.windSpeed(city.currentWeather.windSpeed))
+                ],
+              ),
+            ),
+            const Divider(),
             Container(
                 padding: const EdgeInsets.all(15),
                 child: Column(
