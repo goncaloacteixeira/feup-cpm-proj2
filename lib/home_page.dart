@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w4cast/city_page.dart';
 import 'package:w4cast/components/city_main_item.dart';
-import 'package:w4cast/edit_cities_page.dart';
-import 'package:http/http.dart' as http;
 import 'package:w4cast/constants.dart';
+import 'package:w4cast/edit_cities_page.dart';
 import 'package:w4cast/models/city.dart';
 
 class HomePage extends StatefulWidget {
@@ -74,35 +74,39 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else {
-      return Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.all(10.0),
-          margin: const EdgeInsets.only(bottom: 18.0),
-          child: ListView.separated(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            separatorBuilder: (context, index) => const SizedBox(
-              height: 10,
-            ),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  CityPage(city: _cities.toList()[index])))
-                      .then((value) => _loadCities());
+      return RefreshIndicator(
+          onRefresh: () async {
+            _loadCities();
+          },
+          child: Center(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.only(bottom: 18.0),
+              child: ListView.separated(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
+                ),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      CityPage(city: _cities.toList()[index])))
+                          .then((value) => _loadCities());
+                    },
+                    child: CityMainItem(city: _cities.toList()[index]),
+                  );
                 },
-                child: CityMainItem(city: _cities.toList()[index]),
-              );
-            },
-            itemCount: _cities.length,
-          ),
-        ),
-      );
+                itemCount: _cities.length,
+              ),
+            ),
+          ));
     }
   }
 

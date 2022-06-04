@@ -111,7 +111,8 @@ class CityPage extends StatelessWidget {
                   CityWeatherDetailsItem(
                       property: "Visibilidade",
                       icon: Icons.visibility,
-                      value: Utils.classifyVisibility(city.currentWeather.visibility)),
+                      value: Utils.classifyVisibility(
+                          city.currentWeather.visibility)),
                   const SizedBox(
                     height: 30,
                   ),

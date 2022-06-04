@@ -12,16 +12,14 @@ class CityMainItem extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Colors.blue
-      ),
+          borderRadius: BorderRadius.circular(10), color: Colors.blue),
       child: Row(
         children: [
           Expanded(
             flex: 2,
             child: Image(
               image: NetworkImage(
-                  "http://openweathermap.org/img/wn/${city.currentWeather.icon}@2x.png"
-              ),
+                  "http://openweathermap.org/img/wn/${city.currentWeather.icon}@2x.png"),
             ),
           ),
           Expanded(
@@ -58,13 +56,11 @@ class CityMainItem extends StatelessWidget {
                             .bodyText2
                             ?.copyWith(color: Colors.white),
                       ),
-                      Text(
-                          "/",
+                      Text("/",
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1
-                              ?.copyWith(color: Colors.white)
-                      ),
+                              ?.copyWith(color: Colors.white)),
                       Text(
                         "${city.todayWeather.min.toStringAsFixed(0)}\u00B0",
                         style: Theme.of(context)
